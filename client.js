@@ -35,6 +35,6 @@ alt.on('keyup', (key) => {
     view.emit('toggleEditor');
   }
   else if (opened && key == 0x1B) {
-    view.execJS('toggleEditor()');
+    view.emit('toggleEditor');
   }
 })
