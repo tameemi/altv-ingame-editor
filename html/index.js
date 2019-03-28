@@ -129,8 +129,8 @@ function toggleEditor() {
 		console.log('not active');
 		mainEditor.className = "active";
 		alt.emit('editorOpened', true);
+		editor.focus();
 	}
-	editor.focus();
 }
 
 alt.on('toggleEditor', () => {
