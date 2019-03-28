@@ -75,12 +75,8 @@ function switchTab(selectedTab, modelId) {
 	}
 
 	selectedTab.className = 'tab active';
-	console.log(selectedTab);
-	console.log(modelId);
 	var currentState = editor.saveViewState();
-	console.log(currentState);
 	var currentModel = editor.getModel();
-	console.log(currentModel);
 	if (currentModel === data.client.model) {
 		data.client.state = currentState;
 	} else if (currentModel === data.server.model) {
@@ -122,11 +118,9 @@ function execute() {
 function toggleEditor() {
 	let mainEditor = document.getElementById('main-container');
 	if (mainEditor.classList.contains("active")) {
-		console.log('is active');
 		mainEditor.className = "hidden";
 		alt.emit('editorOpened', false);
 	} else {
-		console.log('not active');
 		mainEditor.className = "active";
 		alt.emit('editorOpened', true);
 		editor.focus();
