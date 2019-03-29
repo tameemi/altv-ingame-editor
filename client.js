@@ -4,6 +4,7 @@ import game from 'natives';
 
 let loaded = false;
 let opened = false;
+let currentMouseState = null;
 
 let view = new alt.WebView("http://resources/editor/html/index.html");
 
@@ -21,7 +22,10 @@ view.on('editorReady', () => {
 view.on('editorOpened', (active) => {
     opened = active;
     alt.toggleGameControls(!active);
-    alt.showCursor(active)
+    if(currentMouseState !== active){
+      alt.showCursor(active)
+      currentMouseState = active;
+    }
     if(active)
       view.focus();
 })
