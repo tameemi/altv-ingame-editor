@@ -31,13 +31,13 @@ const serverDefaultValue = `
 const playerPos = { x: 414.20746, y: -972.52386, z: 29.44237, heading:-185.0 }
 let localPlayer = alt.getLocalPlayer();
 let localPlayerId = localPlayer.scriptID;
-game.setEntityCoords(localPlayerId, playerPos.x, playerPos.y, playerPos.z, 1, 0, 0, 1);
-`
+game.setEntityCoords(localPlayerId, playerPos.x, playerPos.y, playerPos.z, 1, 0, 0, 1);`;
+
 const clientDefaultValue = `
 //server code
 player.pos = {x:400.20746, y: -951.52386, z: 29.39782};`;
 
-function createEditor(){
+function createEditor() {
 	let mainEditor = document.getElementById('main-container');
 	data.client.model = monaco.editor.createModel(serverDefaultValue, 'javascript');
 	data.server.model = monaco.editor.createModel(clientDefaultValue, 'javascript');
@@ -64,7 +64,6 @@ function createEditor(){
 }
 
 createEditor();
-
 
 function switchTab(selectedTab, modelId) {
 	var tabs = document.getElementById('tabs');
@@ -131,7 +130,6 @@ alt.on('toggleEditor', () => {
 	toggleEditor();
 });
 
-
 function getDate() {
 	let returnDate;
 	const date = new Date();
@@ -146,5 +144,4 @@ function getDate() {
 	return returnDate;
 }
 
-window.addEventListener('load', function(){
-});
+window.addEventListener('load', function() {});
