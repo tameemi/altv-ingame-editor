@@ -1,5 +1,5 @@
 import * as alt from 'alt';
-import game from 'natives';
+import * as game from 'natives';
 
 
 let loaded = false;
