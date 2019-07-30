@@ -6,8 +6,6 @@ A server/client-sided editor made for [Alt:V MP](https://altv.mp/#/) and powered
 * Create a folder called "editor" and place it in resources.
 * Edit server.cfg and add "editor" to resources.
 
-**NOTE:** This project has only been tested with Windows environments.
-
 ### Editor Access
 * **F4** - Toggles the in-game editor.
 
