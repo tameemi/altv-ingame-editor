@@ -22,13 +22,85 @@ body {
 #main-container{
     color: rgb(250, 255, 255);
     position: absolute;
+    height: auto;
+}
+
+#main-container.center {
     margin: auto;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-    width: 800px;
+    width: 43.7%;
+    max-width: 43.7%;
     height: 70vh;
+}
+
+#main-container.top {
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+#main-container.bottom {
+    width: 100%;
+    bottom: 0;
+    left: 0;
+}
+
+#main-container #container {
+    width: 90%;
+}
+
+#openedFiles {
+    background-color: #1E1E1E;
+    display: block;
+    position: absolute;
+    right:0;
+    top: 40px;
+    width: 10%;
+    text-align: center;
+    height: calc(100% - 70px);
+    max-height: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+#openedFiles::-webkit-scrollbar {
+    width: 0;
+}
+
+#main-container.center #openedFiles {
+    height: calc(100% - 153px);
+}
+
+#openedFiles .file {
+    background-color: #34352f;
+    border: 1px solid black;
+    line-height: 40px;
+    font-size: 1rem;
+}
+
+#openedFiles .file .type {
+    font-size: .65rem;
+    display: block;
+    padding:0;
+    margin:-5px;
+}
+
+#openedFiles .file .filename {
+    padding:0;
+    display:block;
+    line-height: 20px;
+    margin-bottom: 5px;
+}
+
+#openedFiles .file:hover, #openedFiles .file .filename:hover, #openedFiles .file .type:hover {
+    cursor: pointer;
+}
+
+#openedFiles .file.active {
+    background-color: #84ad73;
 }
 
 #tabs {
@@ -38,22 +110,16 @@ body {
     width: 100%;
 }
 
-#tabs .tab{
-    background-color: #34352f;
-    color:#bfbfb9;
+#tabs .currentWindow {
+    color: #a5a79b;
+    margin-left: 15px;
     line-height: 40px;
-    width: 100px;
-    text-align: center;
-    font-size: 1rem;
 }
 
-#tabs .tab:hover {
-    cursor: pointer;
-}
-
-#tabs .tab.active {
-    background-color: #84ad73;
-    color:#fff;
+#tabs .position {
+    line-height: 40px;
+    position: absolute;
+    right:10%;
 }
 
 #tabs .alt-logo {

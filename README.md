@@ -8,5 +8,8 @@ A server/client-sided editor made for [Alt:V MP](https://altv.mp/#/) and powered
 
 ### Editor Access
 * **F4** - Toggles the in-game editor.
+* **F5** - Toggles the editor opacity.
+* **F7** - Execute code of current window.
 
-![image](https://i.imgur.com/BOzjvaH.png)
+![image](https://i.imgur.com/VXzyCNQ.png)
+![image](https://i.imgur.com/q5yl9vT.png)
