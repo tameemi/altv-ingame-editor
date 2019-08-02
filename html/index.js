@@ -6279,19 +6279,11 @@ var data = {
 			{
 				model: null,
 				state: null
-			},
-			{
-				model: null,
-				state: null
 			}
 		]
 	},
 	server: {
 		windows: [
-			{
-				model: null,
-				state: null
-			},
 			{
 				model: null,
 				state: null
