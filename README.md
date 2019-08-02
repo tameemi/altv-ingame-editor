@@ -1,4 +1,4 @@
-# Alt:V In-Game Editor
+# Alt:V In-Game Editor V2 by Matspyder
 A server/client-sided editor made for [Alt:V MP](https://altv.mp/#/) and powered by the [Monaco Editor](https://microsoft.github.io/monaco-editor/index.html)
 
 ### Prerequisites
