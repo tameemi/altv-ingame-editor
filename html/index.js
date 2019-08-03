@@ -6278,7 +6278,8 @@ var data = {
 		windows: [
 			{
 				model: null,
-				state: null
+				state: null,
+				id: 0
 			}
 		]
 	},
@@ -6286,12 +6287,17 @@ var data = {
 		windows: [
 			{
 				model: null,
-				state: null
+				state: null,
+				id: 1
 			}
 		]
 	}
 };
 var editor = null;
+var currWindowsId = 2;
+
+var wm = null;
+var consoleWindow = null;
 
 if(debug){
 	const alt_mock = {
@@ -6310,7 +6316,7 @@ if(debug){
 const clientDefaultValue = `
 //client code
 const playerPos = { x: 414.20746, y: -972.52386, z: 29.44237, heading:-185.0 }
-let localPlayer = alt.getLocalPlayer();
+let localPlayer = alt.Player.local;
 let localPlayerId = localPlayer.scriptID;
 game.setEntityCoords(localPlayerId, playerPos.x, playerPos.y, playerPos.z, 1, 0, 0, 1);`;
 
@@ -6336,9 +6342,12 @@ function createEditor() {
 		} else {
 			html.className = 'file';
 		}
-
+		html.dataset.context = 'false';
+		html.dataset.modelType = 'client';
+		html.dataset.id = file.id;
+		html.dataset.isWindow = 'true';
 		html.onclick = function(ev) {
-			switchTab(this, 'client', key);
+			switchTab(this, 'client', file.id);
 		}
 
 		let html2 = document.createElement('span');
@@ -6364,8 +6373,12 @@ function createEditor() {
 		} else {
 			html.className = 'file';
 		}
+		html.dataset.context = 'false';
+		html.dataset.modelType = 'server';
+		html.dataset.id = file.id;
+		html.dataset.isWindow = 'true';
 		html.onclick = function(ev) {
-			switchTab(this, 'server', key);
+			switchTab(this, 'server', file.id);
 		}
 
 		let html2 = document.createElement('span');
@@ -6445,19 +6458,24 @@ function switchTab(selectedTab, modelId, fileId) {
 
 	document.getElementsByClassName('currentWindow')[0].innerText = `${modelId == 'client' ? 'Client' : 'Server'} - Window ${fileId}`;
 
-	editor.setModel(data[modelId].windows[fileId].model);
+	editor.setModel(data[modelId].windows.find(x => x.id == fileId).model);
 	editor.focus();
 }
 
 function addWindow(type) {
 	if (type == 'server') {
-		let key = data.server.windows.push({
+		let key = currWindowsId++;
+		data.server.windows.push({
 			model: monaco.editor.createModel(serverDefaultValue, 'javascript'),
-			state: null
-		}) - 1;
+			state: null,
+			id: key
+		});
 
 		let html = document.createElement('div');
 		html.className = 'file';
+		html.dataset.id = key;
+		html.dataset.modelType = 'server';
+		html.dataset.isWindow = 'true';
 		html.onclick = function(ev) {
 			switchTab(this, 'server', key);
 		}
@@ -6478,13 +6496,18 @@ function addWindow(type) {
 		switchTab(html, 'server', key);
 		html.scrollIntoView();
 	} else {
-		let key = data.client.windows.push({
+		let key = currWindowsId++;
+		data.client.windows.push({
 			model: monaco.editor.createModel(clientDefaultValue, 'javascript'),
-			state: null
-		}) - 1;
+			state: null,
+			id: key
+		});
 
 		let html = document.createElement('div');
 		html.className = 'file';
+		html.dataset.id = key;
+		html.dataset.modelType = 'client';
+		html.dataset.isWindow = 'true';
 		html.onclick = function(ev) {
 			switchTab(this, 'client', key);
 		}
@@ -6505,6 +6528,43 @@ function addWindow(type) {
 		switchTab(html, 'client', key);
 		html.scrollIntoView();
 	}
+}
+
+function closeWindow(windowId) {
+	if (windowId == 0 || windowId == 1)
+		return;
+	let wdw = data.client.windows.findIndex(x => x.id == windowId);
+	if (wdw == -1) {
+		wdw = data.server.windows.findIndex(x => x.id == windowId);
+		if (wdw == -1)
+			return;
+		data.server.windows.splice(wdw, 1);
+	} else {
+		data.client.windows.splice(wdw, 1);
+	}
+
+	let dom = null;
+	let backupWindow = null;
+
+	let parentDom = document.getElementById('openedFiles');
+	for (let i = 0; i < parentDom.childNodes.length; i++) {
+		if (dom != null && backupWindow != null)
+			break;
+		let child = parentDom.childNodes[i];
+		if (child.dataset != null) {
+			
+			if (child.dataset.id == windowId) {
+				dom = child;
+				if (backupWindow != null)
+					break;
+			} else if (backupWindow == null && child.dataset.isWindow) {
+				backupWindow = child;
+			}
+		}
+	}
+	if (dom.classList.contains('active'))
+		switchTab(backupWindow, backupWindow.dataset.modelType, backupWindow.dataset.id);
+	dom.remove();
 }
 
 function execute() {
@@ -6541,10 +6601,12 @@ function toggleEditor() {
 	if (mainEditor.classList.contains("active")) {
 		mainEditor.classList.remove("active")
 		mainEditor.classList.add("hidden");
+		consoleWindow.close();
 		alt.emit('editorOpened', false);
 	} else {
 		mainEditor.classList.remove("hidden")
 		mainEditor.classList.add("active");
+		consoleWindow.open();
 		alt.emit('editorOpened', true);
 		editor.focus();
 	}
@@ -6596,4 +6658,70 @@ function changePosition(val) {
 	editor.layout();
 }
 
-window.addEventListener('load', function() {});
+let contextMenuOpen = false;
+let contextWindow = null;
+
+document.getElementById('openedFiles').oncontextmenu = function(e) {
+
+	let menu = document.getElementById('contextmenu');
+
+	e.preventDefault();
+
+	contextWindow = e.srcElement.parentElement;
+	if (contextWindow.dataset != undefined && contextWindow.dataset.context == "false") {
+		contextWindow = null;
+		contextMenuOpen = false;
+		menu.style.display = 'none';
+		return;
+	}
+
+	menu.style.left = e.pageX+"px";
+	menu.style.top = e.pageY+"px";
+
+	menu.style.display = 'block';
+
+	contextMenuOpen = true;
+
+}
+
+document.getElementById('contextmenu').onclick = function(e) {
+	e.preventDefault();
+	let action = e.srcElement.dataset.action;
+
+	switch(action) {
+		case 'close': {
+			closeWindow(contextWindow.dataset.id);
+			break;
+		}
+	}
+}
+
+document.onclick = function(e) {
+	if (contextMenuOpen) {
+		document.getElementById('contextmenu').style.display = 'none';
+		contextMenuOpen = false;
+		contextWindow = null;
+	}
+}
+
+window.addEventListener('load', function() {
+	wm = new Ventus.WindowManager();
+	consoleWindow = wm.createWindow.fromQuery('#consoleWindow', {
+		title: 'Output',
+		x: 10,
+		y: 50,
+		width: 400,
+		height: 200,
+		animations: false
+	});
+	document.getElementById('consoleWindow').style.display = 'block';
+});
+
+function addConsoleMessage(message) {
+	let html = document.createElement('li');
+	html.innerText = message;
+	document.getElementById('consoleWindow').children[0].appendChild(html);
+	html.scrollIntoView();
+}
+
+alt.on('consoleLog', addConsoleMessage);
