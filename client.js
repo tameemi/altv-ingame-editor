@@ -7,6 +7,20 @@ let currentMouseState = null;
 
 let view = new alt.WebView("http://resources/editor/html/index.html");
 
+let editor = {
+    log: function(...messages) {
+        messages.forEach((message) => {
+            view.emit('consoleLog', message);
+        })
+        alt.log(...messages);
+    },
+    serverLog: function(...messages) {
+        messages.forEach((message) => {
+            view.emit('consoleLog', "[Server] => " + message);
+        })
+    }
+}
+
 view.on('clientEvalExecute', (evalcode) => {
     eval(evalcode);
 })
@@ -57,3 +71,5 @@ alt.on('keyup', (key) => {
         }
     }
 })
+
+alt.onServer('consoleLog', editor.serverLog)

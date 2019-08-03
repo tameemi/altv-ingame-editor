@@ -4,28 +4,29 @@
 	  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
     <link rel="stylesheet" data-name="vs/editor/editor.main" href="monaco-editor/min/vs/editor/editor.main.css">
+    <!-- <link rel="stylesheet" href="./ventus/ventus.css"> -->
     <link rel="stylesheet" data-name="editor" href="editor.css">
   </head>
 
   <body>
     <div id="main-container" class="notVisible center">
 
-    <div id="tabs">
-      <div class="currentWindow">Client - Window 0</div>
-      <div class="position">
-        <select name="position" id="positionInput" onchange="changePosition(this.value)">
-          <option value="center">Center</option>
-          <option value="top">Top</option>
-          <option value="bottom">Bottom</option>
-        </select>
+      <div id="tabs">
+        <div class="currentWindow">Client - Window 0</div>
+        <div class="position">
+          <select name="position" id="positionInput" onchange="changePosition(this.value)">
+            <option value="center">Center</option>
+            <option value="top">Top</option>
+            <option value="bottom">Bottom</option>
+          </select>
+        </div>
+        <img class="alt-logo" src="https://altv.mp/img/v_logo.svg">
       </div>
-      <img class="alt-logo" src="https://altv.mp/img/v_logo.svg">
-    </div>
 
-    <div id="container" style="height:600px;border:1px solid grey"></div>
+      <div id="container" style="height:600px;border:1px solid grey"></div>
       <div id="openedFiles">
-        <div class="file" onclick="addWindow('client')"><span class="type">+</span><span class="filename">Client</span></div>
-        <div class="file" onclick="addWindow('server')"><span class="type">+</span><span class="filename">Server</span></div>
+        <div class="file" data-context="false" onclick="addWindow('client')"><span class="type">+</span><span class="filename">Client</span></div>
+        <div class="file" data-context="false" onclick="addWindow('server')"><span class="type">+</span><span class="filename">Server</span></div>
       </div>
 
       <div id="footer">
@@ -35,6 +36,19 @@
       </div>
     </div>
 
+    <div id="contextmenu">
+      </hr>
+      <ul id="items">
+        <li data-action="close">Close</li>
+      </ul>
+    </div>
+
+    <div id="consoleWindow">
+      <ul>
+      </ul>
+    </div>
+
+    <script src="./ventus/ventus.js"></script>
     <script>var require = { paths: { 'vs': 'monaco-editor/min/vs' } };</script>
     <script src="monaco-editor/min/vs/loader.js"></script>
     <script src="monaco-editor/min/vs/editor/editor.main.nls.js"></script>
@@ -42,6 +56,11 @@
 
     <!-- <script src="altv.d.ts"></script> -->
     <!-- <script src="natives.d.ts"></script> -->
+    <script>
+      // document.addEventListener("DOMContentLoaded", () => {
+      //   console.log(Ventus)
+      // });
+    </script>
     <script src="index.js"></script>
     
   </body>
