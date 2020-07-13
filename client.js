@@ -6,7 +6,7 @@ let loaded = false;
 let opened = false;
 let currentMouseState = null;
 
-let view = new alt.WebView("http://resources/editor/html/index.html");
+let view = new alt.WebView("http://resource/html/index.html");
 
 view.on('clientEvalExecute', (evalcode) => {
   eval(evalcode);
